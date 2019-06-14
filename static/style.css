@@ -21,12 +21,31 @@ main {
   }
 
 
-.bg { 
+body{ 
+
+  
   /* The image used */
   /* background-image: url("/static/art/FlatNight4BG.png"); */
 
-  background-image: url("/static/art/FlatNight4BG.png");
+  animation: bodymotion 30s  both;
+ 
+}
+@keyframes bodymotion {
+  0% {
+    transform: scale(1) translateY(0);
+    transform-origin: 16% 50% ;
+  }
+  100% {
+    transform: scale(1.25) translateY(-15px);
+    transform-origin: top;
+  }
+}
 
+
+
+.bg{
+  
+  background-image: url("/static/art/FlatNight4BG.png");  
   
   background-size: contain;
   /* Full height */
@@ -35,19 +54,40 @@ main {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  animation: main 30s ease-out both;
+
+
+  animation: main 20s  infinite alternate  both;
+  
+
 }
+
 
 
 @keyframes main {
   0% {
     transform: scale(1) translateY(0);
-    transform-origin: 50% 16%;
+    transform-origin: 20% 100%;
+    
+    -webkit-filter: grayscale(5%);
+    filter: grayscale(5%)
+
+   
+  
+ 
   }
   100% {
     transform: scale(1.25) translateY(-15px);
     transform-origin: top;
+
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%)
+
+   
   }
+
+ 
+
+    
 }
 
 
@@ -134,8 +174,20 @@ h4 {
   font-weight: 900;
   font-size:3.5vw;
   color: white;
+
+ 
   
 }
+
+@keyframes bg-pan-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
 
 .ml11 .text-wrapper {
   position: relative;
@@ -163,6 +215,7 @@ h4 {
 .ml11 .letter {
   display: inline-block;
   line-height: 1em;
+  
 }
 
 
