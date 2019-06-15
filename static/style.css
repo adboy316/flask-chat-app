@@ -15,29 +15,24 @@ main {
 body,
 html {
     height: 100%;
-    margin: 0;
+    /* margin: 0; */
     font: normal 16px/1.9em "Inter UI", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
     /* The image used */
-    /* background-image: url("/static/art/FlatNight4BG.png"); */
+    /* background-image: url("/static/art/FlatNight4BG.svg"); */
+    /* background: url('data:image/svg+xml;utf8, ') center center no-repeat; */
     animation: bodymotion 30s both;
+    animation: main 20s infinite alternate both;
 }
 
 
 /* this is the svg branch */
 
-svg {
-    height: 100%;
-    background-image: url("/static/art/FlatNight4BG.png");
-    animation: main 20s infinite alternate both;
-}
 
-
-/* object.background {
+/* svg {
     height: 100%;
-    repeat: no-repeat;
 } */
 
 @keyframes bodymotion {

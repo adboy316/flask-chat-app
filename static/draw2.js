@@ -1,20 +1,13 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-    const svg = d3.select('#svg');
-
-
-
-    function draw_point() {
-        const coords = d3.mouse(this);
-
-        svg.append('circle')
-            .attr('cx', coords[0])
-            .attr('cy', coords[1])
-            .attr('r', 5)
-            .style('fill', 'black');
-    };
-
-    svg.on('mousemove', draw_point);
-
-    render();
-});
+(function() {
+    // Prevent White Flash While iFrame Loads. Prevent variables from being global.
+    // 1. Inject CSS which makes iframe invisible 
+    var div = document.createElement('div'),
+        ref = document.getElementsByTagName('base')[0] ||
+        document.getElementsByTagName('script')[0];
+    div.innerHTML = '&shy;<style> iframe { visibility: hidden; } </style>';
+    ref.parentNode.insertBefore(div, ref);
+    // 2. When window loads, remove that CSS, making iframe visible again
+    window.onload = function() {
+        div.parentNode.removeChild(div);
+    }
+})();
