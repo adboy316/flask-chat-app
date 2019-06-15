@@ -14,7 +14,6 @@ main {
 
 
   body, html {
-    
     height: 100%;
     margin: 0;
     font: normal 16px/1.9em "Inter UI", "Source Sans Pro","Helvetica Neue", Arial, sans-serif;
@@ -22,14 +21,23 @@ main {
 
 
 body{ 
-
-  
   /* The image used */
   /* background-image: url("/static/art/FlatNight4BG.png"); */
-
   animation: bodymotion 30s  both;
- 
+  background: #000;
 }
+
+ /* this is the svg branch */
+
+object.background {
+  height:100%;
+  
+  
+ 
+  animation: main 20s  infinite alternate  both;
+  repeat: no-repeat;
+}
+
 @keyframes bodymotion {
   0% {
     transform: scale(1) translateY(0);
@@ -42,27 +50,6 @@ body{
 }
 
 
-
-.bg{
-  
-  background-image: url("/static/art/FlatNight4BG.png");  
-  
-  background-size: contain;
-  /* Full height */
-  height: 100%; 
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-
-
-  animation: main 20s  infinite alternate  both;
-  
-
-}
-
-
-
 @keyframes main {
   0% {
     transform: scale(1) translateY(0);
@@ -71,9 +58,6 @@ body{
     -webkit-filter: grayscale(5%);
     filter: grayscale(5%)
 
-   
-  
- 
   }
   100% {
     transform: scale(1.25) translateY(-15px);
@@ -82,11 +66,7 @@ body{
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%)
 
-   
   }
-
- 
-
     
 }
 
