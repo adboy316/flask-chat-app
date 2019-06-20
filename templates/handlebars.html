@@ -1,0 +1,44 @@
+<html>
+      <head>
+            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+            <script src="static/test.js"></script>
+
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+          <script id="result" type="text/template">
+              <p>
+                 Message: {{ message }}
+              </p>
+          </script>
+
+
+          <script>
+
+              // Template for roll results
+              const template = Handlebars.compile(document.querySelector('#result').innerHTML);
+
+              document.addEventListener('DOMContentLoaded', () => {
+                  document.querySelector('#button').onclick = ()  => {
+
+                      // Generate random rolls.
+                      const message = document.querySelector('#msg').value;
+                      
+
+                      // Add roll results to DOM.
+                      const content = template({'message': message});
+                      document.querySelector('#messages').innerHTML += content;
+                  };
+              });
+          </script>
+
+      </head>
+
+
+
+      <ul id="messages">
+        </ul>
+        <hr>
+        
+        <input type="text" name="msg" id="msg" autocomplete="off" placeholder="Type a Message">
+
+        <button id="button">Send Transmission   </button>
+  </html>

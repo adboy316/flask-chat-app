@@ -1,37 +1,99 @@
-var timesClicked = 0;
+document.addEventListener('DOMContentLoaded', () => {
 
-function keyAnimations() {
+  
 
-    if (timesClicked > 1) {
-        return;
-    }
+  // Connect to websocket
+  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    if (timesClicked === 0) {
-        timesClicked++;
-        let ellipse1 = document.getElementById('path4698');
-    ellipse1.style.animationPlayState  = 'running';
-    document.querySelector('form-control').onclick = () => {
-        if (ellipse1.style.animationPlayState  === 'paused')
-        ellipse1.style.animationPlayState = 'running';
-        else
-        ellipse1.style.animationPlayState  = 'paused';
-    }
+  socket.on('connect', function(){
 
+    /* Adds user to users online list  */
+    console.log(online_users);
+    socket.emit('user login', {'users': online_users});
+    socket.on('login success', data => {
+      const li = document.createElement('li');
+      li.innerHTML = `Users Onlne: ${data.users}`;
+      $("#online_users").html(li)
+  });
     
-    } else {
+     /*  Form submission emits a "chat message" event */
+    $(function () {
+      $('#chat').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        const chat_message = $('#m').val();
+        var usr = document.querySelector('#messages').dataset.user;
+        socket.emit('chat message', {'chat_message': chat_message, 'usr': usr});
+        $('#m').val('');
+        return false;
+      });
+    });
 
-        let ellipse1 = document.getElementById('ellipse4728');
-        ellipse4728.style.animationPlayState  = 'running';
-    document.querySelector('form-control').onclick = () => {
-        if (ellipse4728.style.animationPlayState  === 'paused')
-        ellipse4728.style.animationPlayState = 'running';
-        else
-        ellipse4728.style.animationPlayState  = 'paused';
-    }
+     /*  Channel creation */
+     $(function () {
+      $('#channel_form').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        const channel_name = $('#channel_name').val();
+        socket.emit('create channel', {'channel_name': channel_name});
+        $('#channel_name').val('');
+        return false;
+      });
+    });
 
 
-    }
+
+    /* When a new message is announced, add to the unordered list #messages */
+    socket.on('receive message', data => {
+      const li = document.createElement('li');
+      li.innerHTML = `${data.usr}  : ${data.chat_message}`;
+      document.querySelector('#messages').append(li);
+  });
+
+
+  socket.on('channel created', data => {
+    var li = document.createElement('li');
+    var newlink = document.createElement('a');
     
-}
+    newlink.title = `${data.channel_name}`;
+    newlink.href = "http://example.com";
+    li.appendChild(newlink);
+    newlink.innerHTML = `${data.channel_name}`;
+    document.querySelector('#channel_list').append(li);
+});
 
+    // socket.on('disconnect', function(){
+    //   console.log('user disconnected');
+    // });
+
+  
+   
+
+
+    // Create room links in html
+    // When those links are clicked, chat space changes 
+
+
+
+  });
+
+ 
+
+
+
+});
+
+
+// // Listen for enter key, and send message when pressed
+// function enterKeyListener() {
+//   var input = document.getElementById("msg");
+//   // Execute a function when the user releases a key on the keyboard
+//   input.addEventListener("keyup", function (event) {
+//     // Number 13 is the "Enter" key on the keyboard
+//     if (event.keyCode === 13) {
+//       // Cancel the default action, if needed
+//       event.preventDefault();
+//       // Trigger the button element with a click
+//       document.getElementById("button").click();
+//     }
+//   });
+// }
 

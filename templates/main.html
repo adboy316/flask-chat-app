@@ -1,24 +1,58 @@
-<!doctype html>
-
 <html>
-    <head>
-        <script>
-            function hello() {
-                alert('Hello World!');
-            }
 
-            function displayDate() {
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+        integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 
-                let now = new Date();
-                alert(now);
-            }
-        </script>
-        <title>My Website</title>
-    </head>
-    <body >
-        <h1 onclick="hello()" >Welcome!</h1>
-        
+    <script src="static/main.js"></script>
 
-        <button onclick="displayDate()">Click Here!</button>
-    </body>
+    <title>Vote</title>
+
+</head>
+
+<script> var online_users = "{{ users }}" </script>
+
+<body>
+    <ul id="online_users">
+    </ul>
+    <hr>
+
+    Your username: {{ user }}
+
+    <div id="current_channel">
+        <ul 
+        id="messages" data-user='{{ user}}'>
+        </ul>
+        <hr>
+        <form action="" class="chat" id="chat">
+            <input type="text" name="m" id="m" autocomplete="off" placeholder="Type a Message">
+            <button>Send Transmission </button>
+        </form>
+    </div>
+
+    <hr>
+    <div id="channels">
+           
+            <form action="" id="channel_form">
+                    <input type="text" name="channel_name" id="channel_name" autocomplete="off" placeholder="Create a Channel">
+                    <button>New Channel </button>
+                </form>
+        <ul id="channel_list">
+
+        </ul>
+       
+       
+    </div>
+
+</body>
+
 </html>
