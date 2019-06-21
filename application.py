@@ -28,7 +28,9 @@ def index():
         return render_template('index.html')
     else:
         return main()
-   
+
+
+    
 
 @app.route("/main",  methods=['POST', 'GET'])
 def main():
@@ -59,7 +61,17 @@ def main():
 # def channel(channel):
 #     return texts[2]
 
+@app.route("/test")
+def test():
+    return render_template('test.html')
 
+@socketio.on("test_this_shit")
+def handle_this_shit(data):
+    print(data)
+    s = data + "blue"
+    emit('my response', s)
+
+# User login receives users, and broadcasts users 
 @socketio.on("user login")
 def handle_login(users):
     emit("login success", users, broadcast=True)
@@ -92,7 +104,4 @@ def channeldata(channeldata):
 
 
 
-
-if __name__ == '__main__':
-    socketio.run(app)
 

@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -7,80 +6,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* Update all existing users on connection  */
     socket.emit('user login', { 'users': online_users });
-
-    socket.on('login success', data => {
-      const li = document.createElement('li');
-      li.innerHTML = `Users Online: ${data.users}`;
-      $("#online_users").html(li)
-    });
-
-    /* Update all existing channels on connection  */
+// * Update all existing channels on connection * /
     // Oh shit, this has to do with the form_new_channel div
     socket.emit('update channels', { 'chann': form_new_channel })
-    
-
-    socket.on('broadcast channels', data => {
-      clearBox("nav");
-
-      for (var key in data) {
-        // do something with "key" and "value" variables
-        var li = document.createElement('li');
-        var newlink = document.createElement('a');
-
-        newlink.setAttribute('href', "#");
-        newlink.classList.add("nav-link");
-        newlink.setAttribute("id", "nav-link");
-        newlink.dataset.page = key;
-
-        newlink.title = key;
-        // newlink.onclick= load_page("hey");
-        li.appendChild(newlink);
-        newlink.innerHTML = key;
-        document.querySelector('#nav').append(li);
-
-      }
-
-
-
-    });
-
-
-
-    /*  Form submission emits a "chat message" event */
-    $(function () {
-      $('#chat').submit(function (e) {
-        e.preventDefault(); // prevents page reloading
-        const chat_message = $('#m').val();
-        var usr = document.querySelector('#messages').dataset.user;
-        socket.emit('chat message', { 'chat_message': chat_message, 'usr': usr });
-        $('#m').val('');
-        return false;
-      });
-    });
-
-    /*  Channel creation */
-    $(function () {
-      $('#channel_form').submit(function (e) {
-        e.preventDefault(); // prevents page reloading
-        const channel_name = $('#channel_name').val();
-        socket.emit('create channel', { 'channel_name': channel_name });
-        $('#channel_name').val('');
-        return false;
-      });
-    });
-
-
-
-    /* When a new message is announced, add to the unordered list #messages */
-    socket.on('receive message', data => {
-      const li = document.createElement('li');
-      li.innerHTML = `${data.usr}  : ${data.chat_message}`;
-      document.querySelector('#messages').append(li);
-    });
-
 
 
   });
+
+
+  /* Event listeneres */
+
+  /*  Form submission emits a "chat message" event */
+  $(function () {
+    $('#chat').submit(function (e) {
+      e.preventDefault(); // prevents page reloading
+      const chat_message = $('#m').val();
+      var usr = document.querySelector('#messages').dataset.user;
+      socket.emit('chat message', { 'chat_message': chat_message, 'usr': usr });
+      $('#m').val('');
+      return false;
+    });
+  });
+
+  /*  Channel creation */
+  $(function () {
+    $('#channel_form').submit(function (e) {
+      e.preventDefault(); // prevents page reloading
+      const channel_name = $('#channel_name').val();
+      socket.emit('create channel', { 'channel_name': channel_name });
+      $('#channel_name').val('');
+      return false;
+    });
+  });
+
+  /* Socket handlers */
+  socket.on('broadcast channels', data => {
+    clearBox("nav");
+
+    for (var key in data) {
+      // do something with "key" and "value" variables
+      var li = document.createElement('li');
+      var newlink = document.createElement('a');
+
+      newlink.setAttribute('href', "#");
+      newlink.classList.add("nav-link");
+      newlink.setAttribute("id", "nav-link");
+      newlink.dataset.page = key;
+
+      newlink.title = key;
+      // newlink.onclick= load_page("hey");
+      li.appendChild(newlink);
+      newlink.innerHTML = key;
+      document.querySelector('#nav').append(li);
+    }
+  });
+
+  /* When a new message is announced, add to the unordered list #messages */
+  socket.on('receive message', data => {
+    const li = document.createElement('li');
+    li.innerHTML = `${data.usr}  : ${data.chat_message}`;
+    document.querySelector('#messages').append(li);
+  });
+
+  socket.on('login success', data => {
+    const li = document.createElement('li');
+    li.innerHTML = `Users Online: ${data.users}`;
+    $("#online_users").html(li)
+  });
+
 
   socket.on('channel created', data => {
     var li = document.createElement('li');
