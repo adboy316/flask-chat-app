@@ -17,17 +17,17 @@ socketio = SocketIO(app)
 
 # Users currently logged in
 users = []
-
-# TODO: Channels currently made
-channels = []
-
+channels = {}
+general_channel = "General"
+general_channel = "Everyone"
+channels[general_channel] = general_channel;
 
 @app.route("/")
 def index():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        return render_template('main.html',users=users, user=session['username'])
+        return main()
    
 
 @app.route("/main",  methods=['POST', 'GET'])
@@ -41,22 +41,32 @@ def main():
             users.append(username)
             session['username'] = username
             session['logged_in'] = True
-            return render_template('main.html', users=users, user=username)
+            return render_template('main.html', users=users, channels=channels, user=username)
     if request.method == 'GET' and not session.get('logged_in'):
          return render_template('index.html')
 
     else:
-        return render_template('main.html', users=users, user=session['username'] )
+        return render_template('main.html', users=users, channels=channels, user=session['username'] )
 
-texts = ["text 1", "text 2", "text 3"]
-@app.route("/channel/<string:channel>", methods=['GET'])
-def channel(channel):
-    return texts[0]
+
+# texts = ["text 1", "text 2", "text 3"]
+# @app.route("/main/general")
+# def mainchannel():
+#     return texts[0]
+
+
+# @app.route("/main/<string:channel>")
+# def channel(channel):
+#     return texts[2]
 
 
 @socketio.on("user login")
 def handle_login(users):
     emit("login success", users, broadcast=True)
+
+@socketio.on("update channels")
+def handle_login(channeldata):
+    emit("broadcast channels", channels, broadcast=True)
    
 @socketio.on("chat message")
 def msg(data):
@@ -64,10 +74,24 @@ def msg(data):
     usr = data["usr"]
     emit("receive message", {"chat_message": chat_message, "usr": usr}, broadcast=True)
 
+
+
 @socketio.on("create channel")
 def handle_channels(data):
     channel_name = data["channel_name"]
-    emit("channel created", {"channel_name": channel_name}, broadcast=True)
+    channel_users = ['Todo', 'todo']
+    channels[channel_name] = channel_users;
+    emit("channel created", {"channel_name": channel_name, "channels": channels}, broadcast=True)
+ 
+
+
+@app.route("/<string:channeldata>", methods=['GET'])
+def channeldata(channeldata):
+    return channeldata
+
+
+
+
 
 if __name__ == '__main__':
     socketio.run(app)
