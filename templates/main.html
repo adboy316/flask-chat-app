@@ -13,28 +13,49 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
         integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 
+
+
+
+
     <script src="static/main.js"></script>
 
     <title>Vote</title>
 
+   
+
     <!-- Script for loading page -->
     <script>
+        
         document.addEventListener('DOMContentLoaded', () => {
-            function toggleDone(event) {
-                console.log(event.target.dataset.page)
-                load_page(event.target.dataset.page)
+           
+
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+            socket.on('connect', function () {
+           
+            var current_chan = '{{ current_channel }}'
+            socket.emit('join', { 'username': '{{ user }}', 'channel': current_chan })
+
+            });
+
+            socket.on('update channel data', function (data) {
+                console.log('Incoming message:', data); 
+                load_page(data);
+            });
+            
+
+            function listen_for_channel_clicks(event) {
+                console.log(event.target.dataset.page);
+            socket.emit('join', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
             }
             const characterList = document.querySelector('.nav')
-            characterList.addEventListener('click', toggleDone)
+            characterList.addEventListener('click', listen_for_channel_clicks)
         });
+
+        
     </script>
 </head>
 
-<!-- User and Channel Data -->
-<script>
-    var online_users = "{{ users }}"
-    var channeldata = JSON.parse('{{ channels | tojson }}');
-</script>
 
 <body>
     <ul id="online_users">
@@ -42,15 +63,16 @@
     <hr>
 
     <!-- Displays users online -->
-    Your username: {{ user }}
+    
+    Your username: '{{user}}'; 
     <hr>
     <div id="channel_test">
         Channels: {{ channels }}
-    </div>  
+    </div>
 
     <hr>
 
-     <!-- Form for creating new channel -->
+    <!-- Form for creating new channel -->
     <div id="form_new_channel">
         <form action="" id="channel_form">
             <input type="text" name="channel_name" id="channel_name" autocomplete="off" placeholder="Create a Channel">
@@ -59,27 +81,26 @@
         <ul id="channel_list">
         </ul>
     </div>
-   
-    
+
+
 
     <ul class="nav" id="nav">
         <li><a href="#" class="General" data-page="General">General</a></li>
     </ul>
     <hr>
-    
-    <div 
-    id="channel-content">
+
+    <div id="channel-content">
     </div>
 
     <div id="current_channel">
-            <ul id="messages" data-user='{{ user}}'>
-            </ul>
-            <hr>
-            <form action="" class="chat" id="chat">
-                <input type="text" name="m" id="m" autocomplete="off" placeholder="Type a Message">
-                <button>Send Transmission </button>
-            </form>
-        </div>
+        <ul id="messages" data-user='{{ user}}'>
+        </ul>
+        <hr>
+        <form action="" class="chat" id="chat">
+            <input type="text" name="m" id="m" autocomplete="off" placeholder="Type a Message">
+            <button>Send Transmission </button>
+        </form>
+    </div>
 </body>
 
 </html>

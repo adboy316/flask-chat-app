@@ -1,16 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
+  // On socket connection
   socket.on('connect', function () {
-
     /* Update all existing users on connection  */
-    socket.emit('user login', { 'users': online_users });
-// * Update all existing channels on connection * /
-    // Oh shit, this has to do with the form_new_channel div
-    socket.emit('update channels', { 'chann': form_new_channel })
-
-
+    socket.emit('user login');
+    // * Update all existing channels on connection * /
+    socket.emit('update channels')
   });
 
 
@@ -22,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault(); // prevents page reloading
       const chat_message = $('#m').val();
       var usr = document.querySelector('#messages').dataset.user;
-      socket.emit('chat message', { 'chat_message': chat_message, 'usr': usr });
+      var chn = document.querySelector('#channel-content').dataset.chan;
+      socket.emit('chat message', { 'chat_message': chat_message, 'usr': usr, 'chn': chn });
       $('#m').val('');
       return false;
     });
@@ -39,59 +38,94 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+
+
+
+  socket.on('message', function (data) {
+    console.log('Incoming message:', data);
+  });
+
   /* Socket handlers */
+
+  /* Responds to user_login socket. Loops through all users and displays them.  */
+  socket.on('login success', data => {
+    const li = document.createElement('li');
+    var all_users = []
+    console.log(data);
+    for (var key in data) {
+      all_users.push(key);
+    }
+
+    li.innerHTML = `Users Online: ${all_users}`;
+    $("#online_users").html(li)
+  });
+
+
+  /* Responds to update_channels. Displays all channels */
   socket.on('broadcast channels', data => {
+    // Clear and Append all channels 
     clearBox("nav");
 
     for (var key in data) {
+      channel_name = key;
       // do something with "key" and "value" variables
       var li = document.createElement('li');
       var newlink = document.createElement('a');
-
       newlink.setAttribute('href', "#");
       newlink.classList.add("nav-link");
       newlink.setAttribute("id", "nav-link");
-      newlink.dataset.page = key;
-
-      newlink.title = key;
+      newlink.dataset.page = channel_name;
+      newlink.title = channel_name;
       // newlink.onclick= load_page("hey");
       li.appendChild(newlink);
-      newlink.innerHTML = key;
+      newlink.innerHTML = channel_name;
       document.querySelector('#nav').append(li);
+      //window.location.reload(true);
     }
   });
 
   /* When a new message is announced, add to the unordered list #messages */
   socket.on('receive message', data => {
+
     const li = document.createElement('li');
     li.innerHTML = `${data.usr}  : ${data.chat_message}`;
     document.querySelector('#messages').append(li);
   });
 
-  socket.on('login success', data => {
-    const li = document.createElement('li');
-    li.innerHTML = `Users Online: ${data.users}`;
-    $("#online_users").html(li)
-  });
 
 
-  socket.on('channel created', data => {
-    var li = document.createElement('li');
-    var newlink = document.createElement('a');
-    newlink.href = "#"
-    newlink.classList.add("nav-link");
-    newlink.dataset.page = `${data.channel_name}`;
-    newlink.setAttribute("id", "nav-link");
+  socket.on('update channel data', function (data) {
+    console.log('Incoming message:', data); 
+    load_page(data);
+});
 
-    // newlink.title = `${data.channel_name}`;
-    //newlink.onclick= load_page("hey");
+  // socket.on('update channel data', data => {
 
-    li.appendChild(newlink);
-    newlink.innerHTML = `${data.channel_name}`;
-    document.querySelector('#nav').append(li);
-    window.location.reload(true);
+  //   text_messages = data.all_messages;
+  //   console.log(text_messages);
+  //   console.log(user + ": " + message)
+    
+  
+  //   clearBox("messages");
 
-  });
+  //   for (var i in text_messages) {
+      
+
+  //     var user = text_messages[i].user;
+  //     var message = text_messages[i].message;
+      
+  //     const li = document.createElement('li');
+  //     li.innerHTML = `${user}  : ${message}`;
+  //     document.querySelector('#messages').append(li);
+      
+
+     
+  //   }
+
+  //   console.log(data.all_messages)
+  // });
+
+
 
 
 });
@@ -104,19 +138,29 @@ function clearBox(elementID) {
 }
 
 // Renders contents of new page in main view.
-function load_page(name) {
+function load_page(data) {
+  console.log(data.channel_info);
+  name = data.channel_info.channel_name;
   const request = new XMLHttpRequest();
   request.open('GET', `/${name}`);
   request.onload = () => {
     const response = request.responseText;
     document.querySelector('#channel-content').innerHTML = response;
 
-    const li = document.createElement('li');
-    li.innerHTML = channeldata[name];
-    document.querySelector('#channel-content').append(li);
+    const users_li = document.createElement('li');
+    users_li.innerHTML = data.channel_info.users;
+
+    channel_div = document.querySelector('#channel-content')
+    channel_div.append(users_li);
+    channel_div.dataset.chan = name;
   };
   request.send();
 }
+
+function isEmpty(obj) {
+  return !obj || Object.keys(obj).length === 0;
+}
+
 
 
 // // Listen for enter key, and send message when pressed
