@@ -25,7 +25,6 @@
 
     <!-- Script for loading page -->
     <script>
-        
         document.addEventListener('DOMContentLoaded', () => {
            
 
@@ -36,20 +35,40 @@
             var current_chan = '{{ current_channel }}'
             socket.emit('join', { 'username': '{{ user }}', 'channel': current_chan })
 
-            });
-
             socket.on('update channel data', function (data) {
                 console.log('Incoming message:', data); 
                 load_page(data);
             });
-            
 
+            socket.on('update channel messages', data => {
+
+                console.log("TEEEES")
+                text_messages = data.all_messages;
+              
+                clearBox("messages");
+            
+                for (var i in text_messages) {
+            
+                  var user = text_messages[i].user;
+                  var message = text_messages[i].message;
+                  
+                  const li = document.createElement('li');
+                  li.innerHTML = `${user}  : ${message}`;
+                  document.querySelector('#messages').append(li);     
+                } 
+                
+              });
+
+            });
+
+            
             function listen_for_channel_clicks(event) {
-                console.log(event.target.dataset.page);
-            socket.emit('join', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
+            socket.emit('join', { 'username': '{{ user }}', 'channel': event.target.dataset.page })  
+            socket.emit('update messages', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
             }
+
             const characterList = document.querySelector('.nav')
-            characterList.addEventListener('click', listen_for_channel_clicks)
+            characterList.addEventListener('click', listen_for_channel_clicks)            
         });
 
         

@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* When a new message is announced, add to the unordered list #messages */
+  /* When a new messa q is announced, add to the unordered list #messages */
   socket.on('receive message', data => {
 
     const li = document.createElement('li');
@@ -93,37 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+ 
 
-  socket.on('update channel data', function (data) {
-    console.log('Incoming message:', data); 
-    load_page(data);
-});
 
-  // socket.on('update channel data', data => {
 
-  //   text_messages = data.all_messages;
-  //   console.log(text_messages);
-  //   console.log(user + ": " + message)
-    
   
-  //   clearBox("messages");
-
-  //   for (var i in text_messages) {
-      
-
-  //     var user = text_messages[i].user;
-  //     var message = text_messages[i].message;
-      
-  //     const li = document.createElement('li');
-  //     li.innerHTML = `${user}  : ${message}`;
-  //     document.querySelector('#messages').append(li);
-      
-
-     
-  //   }
-
-  //   console.log(data.all_messages)
-  // });
 
 
 
@@ -162,19 +136,4 @@ function isEmpty(obj) {
 }
 
 
-
-// // Listen for enter key, and send message when pressed
-// function enterKeyListener() {
-//   var input = document.getElementById("msg");
-//   // Execute a function when the user releases a key on the keyboard
-//   input.addEventListener("keyup", function (event) {
-//     // Number 13 is the "Enter" key on the keyboard
-//     if (event.keyCode === 13) {
-//       // Cancel the default action, if needed
-//       event.preventDefault();
-//       // Trigger the button element with a click
-//       document.getElementById("button").click();
-//     }
-//   });
-// }
 

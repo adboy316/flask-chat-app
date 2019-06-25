@@ -109,10 +109,14 @@ def on_join(data):
         channels[room]['users'].append(username)
 
     channel_info = channels[room]
-    print(channels[room]['messages'])
+   
     emit("update channel data", {
-         "channel_info": channel_info, "usr": username, "all_messages": channels[room]['messages']}, room=room)
-         
+         "channel_info": channel_info, "usr": username}, Broadcast=True)
+
+@socketio.on('update messages')
+def update_msgs(data):
+    room = data['channel']
+    emit("update channel messages", {"all_messages": channels[room]['messages']}, Broadcast=True)     
 
 
 
