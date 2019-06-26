@@ -1,0 +1,87 @@
+html {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body,
+.sidebar {
+    height: 100%;
+}
+
+h4, h3  {
+    margin-top: 1em;
+    margin-left: 0.5em;
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+}
+
+.sidebar>* {
+    display: flex;
+    flex-wrap: wrap;
+    margin: calc(1px / 2 * -1);
+    background-color: pink;
+    height: 100%;
+}
+
+.sidebar>*>* {
+    margin: calc(1px / 2);
+    flex: 1 1 15em;
+    background-color: pink;
+}
+
+.sidebar>*> :last-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-height: calc(60% - 0px);
+    min-width: calc(55% - 0px);
+    background-color: blue;
+}
+
+.outsidebar {
+    position: relative;
+}
+
+.message-stack {
+    --space: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-stack>* {
+    width: 90%;
+    /* padding-top: 1em;
+    padding-right: 3em;
+    padding-left: 3em;
+    margin-bottom: 1em;
+    margin-left: 1em; */
+    padding: 1em;
+}
+
+.message-stack>*+* {
+    margin-top: var(--space);
+    margin-right: var(--space);
+}
+
+.message-bar {
+    position: absolute;
+    bottom: 0;
+}
+
+.sidebar-content {
+    --space: 0.5rem;
+    background-color: aqua;
+}
+
+.sidebar-content>* {
+    margin: 0;
+    background-color: rgb(82, 187, 33);
+}
+
+.sidebar-content>*+* {
+    margin-top: var(--space);
+    background-color: cadetblue;
+}

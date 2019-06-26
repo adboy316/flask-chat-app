@@ -1,6 +1,148 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css'
+        integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <!-- Javascript -->
+    <script src="static/main.js"></script>
+
+    <!-- Script for loading page -->
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+                socket.on('connect', function () {
+                var current_chan = '{{ current_channel }}'
+                socket.emit('join', { 'username': '{{ user }}', 'channel': current_chan })
+                socket.emit('update messages', { 'username': '{{ user }}', 'channel': current_chan })
+                });
+    
+                function listen_for_channel_clicks(event) {
+                socket.emit('join', { 'username': '{{ user }}', 'channel': event.target.dataset.page })  
+                socket.emit('update messages', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
+                }
+    
+                const characterList = document.querySelector('.nav')
+                characterList.addEventListener('click', listen_for_channel_clicks) 
+                
+                socket.on('update channel data', function (data) {
+                    console.log('Incoming message:', data); 
+                    load_page(data);
+                });
+    
+                socket.on('update channel messages', data => {
+    
+                    console.log("TEEEES")
+                    text_messages = data.all_messages;
+                  
+                    clearBox("messages");
+                
+                    for (var i in text_messages) {
+                
+                      var user = text_messages[i].user;
+                      var message = text_messages[i].message;
+                      
+                      const li = document.createElement('li');
+                      li.innerHTML = `${user}  : ${message}`;
+                      document.querySelector('#messages').append(li);     
+                    } 
+                    
+                  });
+
+            });
+               
+        </script>
+
+    <title>Intergallactic Chat!</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div>
+            <div class="insidebar">
+                <!-- sidebar -->
+                <div class="sidebar-content">
+                    <div>
+                        <!-- Logo -->
+                        <h3>Intergallactic Chat </h3>
+                         Your username: '{{user}}'; 
+                    </div>
+                    <div>
+                        <!-- Channels -->
+                        <h4>Channels
+                            <span class='fas fa-plus-circle' style='font-size:24px'></span>
+                        </h4>
+
+                        <ul id="channels-list" class="list-group">
+                            <li class="list-group-item py-1 d-flex justify-content-between align-items-center">
+                                Channel 1
+                                <span class="badge badge-primary badge-pill">14</span>
+                            </li>
+                            <li class="list-group-item py-1 d-flex justify-content-between align-items-center">
+                                Channel 2
+                                <span class="badge badge-primary badge-pill">2</span>
+                            </li>
+                            <li class="list-group-item py-1 d-flex justify-content-between align-items-center">
+                                Channel 3
+                                <span class="badge badge-primary badge-pill">1</span>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="outsidebar">
+                <!-- non-sidebar -->
+                <h1>MAIN</h1>
+                <div class="message-stack">
+
+                        <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                  Cras justo odio
+                                  <span class="badge badge-primary badge-pill">14</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                  Dapibus ac facilisis in
+                                  <span class="badge badge-primary badge-pill">2</span>
+                                </li>
+                              </ul>
+
+                    <!-- Message Bar and Button -->
+                    <div class="message-bar">            
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Send Transmission"
+                                aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Button</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -10,116 +152,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
-        integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 
 
-
-
-
-    <script src="static/main.js"></script>
-
-    <title>Vote</title>
-
-   
-
-    <!-- Script for loading page -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-           
-
-            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-
-            socket.on('connect', function () {
-           
-            var current_chan = '{{ current_channel }}'
-            socket.emit('join', { 'username': '{{ user }}', 'channel': current_chan })
-
-            socket.on('update channel data', function (data) {
-                console.log('Incoming message:', data); 
-                load_page(data);
-            });
-
-            socket.on('update channel messages', data => {
-
-                console.log("TEEEES")
-                text_messages = data.all_messages;
-              
-                clearBox("messages");
-            
-                for (var i in text_messages) {
-            
-                  var user = text_messages[i].user;
-                  var message = text_messages[i].message;
-                  
-                  const li = document.createElement('li');
-                  li.innerHTML = `${user}  : ${message}`;
-                  document.querySelector('#messages').append(li);     
-                } 
-                
-              });
-
-            });
-
-            
-            function listen_for_channel_clicks(event) {
-            socket.emit('join', { 'username': '{{ user }}', 'channel': event.target.dataset.page })  
-            socket.emit('update messages', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
-            }
-
-            const characterList = document.querySelector('.nav')
-            characterList.addEventListener('click', listen_for_channel_clicks)            
-        });
-
-        
-    </script>
-</head>
-
-
-<body>
-    <ul id="online_users">
-    </ul>
-    <hr>
-
-    <!-- Displays users online -->
-    
-    Your username: '{{user}}'; 
-    <hr>
-    <div id="channel_test">
-        Channels: {{ channels }}
-    </div>
-
-    <hr>
-
-    <!-- Form for creating new channel -->
-    <div id="form_new_channel">
-        <form action="" id="channel_form">
-            <input type="text" name="channel_name" id="channel_name" autocomplete="off" placeholder="Create a Channel">
-            <button>New Channel </button>
-        </form>
-        <ul id="channel_list">
-        </ul>
-    </div>
-
-
-
-    <ul class="nav" id="nav">
-        <li><a href="#" class="General" data-page="General">General</a></li>
-    </ul>
-    <hr>
-
-    <div id="channel-content">
-    </div>
-
-    <div id="current_channel">
-        <ul id="messages" data-user='{{ user}}'>
-        </ul>
-        <hr>
-        <form action="" class="chat" id="chat">
-            <input type="text" name="m" id="m" autocomplete="off" placeholder="Type a Message">
-            <button>Send Transmission </button>
-        </form>
-    </div>
 </body>
+
+
+
 
 </html>

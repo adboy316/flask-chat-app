@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.emit('update channels')
   });
 
-
   /* Event listeneres */
 
   /*  Form submission emits a "chat message" event */
@@ -34,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const channel_name = $('#channel_name').val();
       socket.emit('create channel', { 'channel_name': channel_name });
       $('#channel_name').val('');
+      clearBox("channel_error_message");
       return false;
     });
   });
@@ -88,16 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('receive message', data => {
 
     const li = document.createElement('li');
-    li.innerHTML = `${data.usr}  : ${data.chat_message}`;
+    li.innerHTML = `${data.usr}: ${data.chat_message}`;
     document.querySelector('#messages').append(li);
   });
 
 
- 
+  socket.on('channel name taken', data => {
+    clearBox("channel_error_message");
+    const li = document.createElement('li');
+    li.innerHTML = `${data}`;
+    document.querySelector('#channel_error_message').append(li);
+  });
 
 
 
-  
+
 
 
 
