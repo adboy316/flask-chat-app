@@ -39,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-
-
   socket.on('message', function (data) {
     console.log('Incoming message:', data);
   });
@@ -64,12 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Responds to update_channels. Displays all channels */
   socket.on('broadcast channels', data => {
     // Clear and Append all channels 
-    clearBox("nav");
+    clearBox("channels-list");
 
     for (var key in data) {
       channel_name = key;
-      // do something with "key" and "value" variables
+      // do something with "key" and "value" variables  
+      var ul = document.createElement('ul');
+      ul.setAttribute("class", "list-group")
+
+
       var li = document.createElement('li');
+      li.setAttribute("class", "list-group-item py-0 d-flex justify-content-between align-items-center")
+      li.setAttribute("id", "list-of-channels")
+
+      ul.appendChild(li);
+
       var newlink = document.createElement('a');
       newlink.setAttribute('href', "#");
       newlink.classList.add("nav-link");
@@ -79,7 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // newlink.onclick= load_page("hey");
       li.appendChild(newlink);
       newlink.innerHTML = channel_name;
-      document.querySelector('#nav').append(li);
+
+      badge = document.createElement('span');
+      badge.setAttribute("class", "badge badge-primary badge-pill")
+      badge.setAttribute("id", "channel-badge");
+      badge.innerHTML = '0';
+      newlink.append(badge);
+
+
+      document.querySelector('#channels-list').append(li);
       //window.location.reload(true);
     }
   });
@@ -88,8 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('receive message', data => {
 
     const li = document.createElement('li');
+    li.setAttribute("class", "list-group-item d-flex justify-content-between align-items-center")
+
     li.innerHTML = `${data.usr}: ${data.chat_message}`;
     document.querySelector('#messages').append(li);
+    $('.message-div').scrollTop($('.message-div')[0].scrollHeight)
   });
 
 
@@ -100,15 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#channel_error_message').append(li);
   });
 
-
-
-
-
-
-
+  
 
 });
-
 
 
 /* Functions */
@@ -123,11 +135,18 @@ function load_page(data) {
   const request = new XMLHttpRequest();
   request.open('GET', `/${name}`);
   request.onload = () => {
+    clearBox("channel-content");
     const response = request.responseText;
-    document.querySelector('#channel-content').innerHTML = response;
+
+    const channel = document.createElement('a');
+    channel.setAttribute("class", "channel-name-outside")
+    channel.innerHTML = response;
+
+    document.querySelector('#channel-content').append(channel);
 
     const users_li = document.createElement('li');
-    users_li.innerHTML = data.channel_info.users;
+    users_li.setAttribute("class", "members")
+    users_li.innerHTML = "Members: " + data.channel_info.users;
 
     channel_div = document.querySelector('#channel-content')
     channel_div.append(users_li);
@@ -140,5 +159,12 @@ function isEmpty(obj) {
   return !obj || Object.keys(obj).length === 0;
 }
 
+function openForm() {
+  document.getElementById("form_new_channel").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("form_new_channel").style.display = "none";
+}
 
 

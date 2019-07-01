@@ -1,0 +1,245 @@
+// Variables
+$sidebar-background: #f7a7c0;
+$form-color: #CC3463;
+html {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body,
+.sidebar {
+    height: 100%;
+}
+
+h4,
+{
+    margin-top: 1em;
+    margin-left: 0.5em;
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+}
+
+.logo {
+    padding-top: 0.4em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    font-family: 'Bungee Shade', cursive;
+    font-size: 22px;
+}
+
+.user-id {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-style: italic;
+    padding: 0;
+    .username {
+        padding-left: 1em;
+    }
+    #astronauticon {
+        color: #271B29;
+    }
+}
+
+
+/* Sidebar */
+
+.sidebar>* {
+    display: flex;
+    flex-wrap: wrap;
+    margin: calc(1px / 2 * -1);
+    height: 100%;
+}
+
+.sidebar>*>* {
+    margin: calc(1px / 2);
+    flex: 1 1 15em;
+    background-color: $sidebar-background;
+}
+
+.sidebar>*> :last-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-height: calc(60% - 0px);
+    min-width: calc(55% - 0px);
+    background-color: white;
+}
+
+.outsidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.channels-sidebar {
+    .channel-heading {
+        font-size: 20px;
+        font-weight: bold;
+        padding-left: 0.7em;
+        padding-top: 0.3em;
+        font-family: 'IBM Plex Sans', sans-serif;
+        #plus-button {
+            margin-left: 4.8em;
+            background-color: Transparent;
+            background-repeat: no-repeat;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+        }
+        #plus-icon:hover {
+            color: rgb(160, 43, 80);
+        }
+    }
+}
+
+#channel-content {
+    padding-top: 0.7em;
+    padding-left: 0.7em;
+}
+
+#messages-separator {
+    flex-grow: 1;
+}
+
+.channel-name-outside {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 30px
+}
+
+.members {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-style: italic;
+    list-style-type: none;
+}
+
+
+/* Messages */
+
+.message-stack {
+    --space: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-stack>* {
+    width: 100%;
+    /* padding-top: 1em;
+    padding-right: 3em;
+    padding-left: 3em;
+   
+    margin-left: 1em; */
+    padding: 1em;
+}
+
+.message-stack>*+* {
+    margin-top: var(--space);
+    margin-right: var(--space);
+}
+
+.message-bar {
+    margin-bottom: auto;
+    padding-left:2em;
+}
+
+#messages-separator {
+    flex-direction: column;
+}
+
+.sidebar-content>* {
+    margin: 0;
+    background-color: $sidebar-background;
+}
+
+.sidebar-content>*+* {
+    margin-top: var(--space);
+    background-color: $sidebar-background;
+}
+
+
+/* Popup form for channel creation - hidden by default */
+
+.form-popup {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    /* adjust as per your needs */
+    height: 200px;
+    /* adjust as per your needs */
+    margin-left: -200px;
+    /* negative half of width above */
+    margin-top: -200px;
+    border: 3px solid $form-color;
+    z-index: 9;
+    background-color: white;
+}
+
+.form-container {
+    max-width: 300px;
+    padding: 10px;
+    background-color: white;
+}
+
+#channel_form {
+    max-height: 100%;
+}
+
+#channel-icon {
+    padding-right: 0.5em;
+    padding-top: 0.3em;
+    color: $form-color;
+}
+
+#channel-title {
+    color: $form-color;
+    font-family: 'Bungee Shade', cursive;
+    font-size: 24px;
+}
+
+#channel-badge {
+    position: absolute;
+    right: 25px;
+    background-color: $form-color
+}
+
+#channel-button-container {
+    margin-top: 30px;
+    width: 50%;
+    margin: 0 auto;
+    #channel-button {
+        background-color: $form-color;
+        border-color: $form-color;
+    }
+}
+
+#list-of-channels {
+    height: 35px;
+    background-color: $sidebar-background;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px
+}
+
+#nav-link {
+    color: black;
+}
+
+#nav-link:hover {
+    color: white;
+}
+
+.message-div {
+    overflow: auto;
+    height: 485px;
+    display: flex;
+    /* move flex-items in column */
+    flex-direction: column;
+}
+
+#messages {
+    /* make messages appear at bottom */
+    margin-top: auto;
+}

@@ -33,7 +33,6 @@ channels = {'General':
 
 """ Routes """
 
-
 @app.route("/")
 def index():
     if not session.get('logged_in'):
@@ -104,7 +103,6 @@ def msg(data):
     emit("receive message", {
          "chat_message": chat_message, "usr": usr}, room=room)
 
-
 @socketio.on('join')
 def on_join(data):
     username = data['username']
@@ -121,14 +119,16 @@ def on_join(data):
     channel_info = channels[room]
 
     emit("update channel data", {
-         "channel_info": channel_info, "usr": username}, Broadcast=True)
+         "channel_info": channel_info, "usr": username}, room=room)
 
 
 @socketio.on('update messages')
 def update_msgs(data):
     room = data['channel']
+    join_room(room)
     emit("update channel messages", {
-         "all_messages": channels[room]['messages']}, Broadcast=True)
+         "all_messages": channels[room]['messages']}) 
+        #  changing this to broadcast changes all channels
 
 
 @socketio.on("create channel")
@@ -137,12 +137,9 @@ def handle_channels(data):
     if channels.get(channel_name):
         emit("channel name taken", "Channel name already taken!", broadcast=True)
         return 
-        
-        
+               
     channel_users = []
     channel_messages = []
-
-    
 
     newchannel = {channel_name:
                   {'channel_name': channel_name,
