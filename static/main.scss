@@ -11,19 +11,18 @@ body,
     height: 100%;
 }
 
-h4,
-{
-    margin-top: 1em;
-    margin-left: 0.5em;
-    padding-top: 1em;
-    padding-bottom: 0.5em;
-    display: flex;
-    align-items: left;
-    justify-content: left;
-}
+// h4 {
+//     margin-top: 1em;
+//     margin-left: 0.5em;
+//     padding-top: 1em;
+//     padding-bottom: 0.5em;
+//     display: flex;
+//     align-items: left;
+//     justify-content: left;
+// }
 
 .logo {
-    padding-top: 0.4em;
+    padding-top: 1em;
     padding-left: 0.3em;
     padding-right: 0.3em;
     font-family: 'Bungee Shade', cursive;
@@ -103,6 +102,7 @@ h4,
 }
 
 .channel-name-outside {
+    padding-top: 0.4em;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 30px
 }
@@ -131,7 +131,7 @@ h4,
     padding-left: 3em;
    
     margin-left: 1em; */
-    padding: 1em;
+    padding: 0.5em;
 }
 
 .message-stack>*+* {
@@ -219,12 +219,15 @@ h4,
 #list-of-channels {
     height: 35px;
     background-color: $sidebar-background;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 18px
+   
 }
 
 #nav-link {
     color: black;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight:400;
+    font-size: 17px
+   
 }
 
 #nav-link:hover {
@@ -233,7 +236,7 @@ h4,
 
 .message-div {
     overflow: auto;
-    height: 485px;
+    height: 510px;
     display: flex;
     /* move flex-items in column */
     flex-direction: column;
@@ -242,4 +245,37 @@ h4,
 #messages {
     /* make messages appear at bottom */
     margin-top: auto;
+    
 }
+
+#single-message {  
+    min-height: 50px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight:500;
+   
+}
+
+#single-message:hover {
+    background-color: #f9eef1;
+}
+
+.timestamp {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+}
+
+#m{
+    height: 50px;
+    border-radius: 25px;
+    
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 2px solid $sidebar-background;
+    
+}
+
+;
+
+#m:focus{
+    border: 2px solid $form-color;     /* oranges! yey */
+  }

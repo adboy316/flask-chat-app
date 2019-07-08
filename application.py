@@ -18,7 +18,6 @@ Session(app)
 socketio = SocketIO(app)
 
 """ Global Variables   """
-
 users = []
 #  user_profiles = {username:
 #                     {'current_channel': 'General'}}
@@ -32,18 +31,13 @@ channels = {'General':
              'messages': []}}
 
 """ Routes """
-
 @app.route("/")
 def index():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
         return main()
-
-@app.route("/test")
-def test():
-    return render_template('sidebar.html')
-    
+        
 
 @app.route("/main",  methods=['POST', 'GET'])
 def main():
@@ -64,7 +58,6 @@ def main():
         return render_template('index.html')
 
     else:
-
         current_channel = user_profiles[session['username']]
         return render_template('main.html', users=users, channels=channels, user=session['username'], current_channel=current_channel['current_channel'])
 
@@ -75,8 +68,7 @@ def channeldata(channeldata):
 
 
 """ Sockets """
-
-# User login receives users, and broadcasts users
+# Receives users, and broadcasts users
 @socketio.on("user login")
 def handle_login():
     emit("login success", user_profiles, broadcast=True)
@@ -94,14 +86,18 @@ def msg(data):
     chn = data["chn"]
 
     room = data["chn"]
-    timestampStr = datetime.datetime.now().strftime("%d-%b-%Y at %H:%M:")
+    timestampStr = datetime.datetime.now().strftime("%d %b %Y @ %H:%M")
     join_room(room)
 
     new_message = {"user": usr, "message": chat_message, "timestamp": timestampStr }
     channels[chn]['messages'].append(new_message)
-
-    emit("receive message", {
-         "chat_message": chat_message, "usr": usr}, room=room)
+    
+    emit("update channel messages", {
+         "all_messages": channels[room]['messages']}, room=room) 
+    
+    # This is redundant, it sends messages twice. Remove if nothing breaks. 
+    # emit("receive message", {
+    #      "chat_message": chat_message, "usr": usr, "timestamp": timestampStr}, room=room )
 
 @socketio.on('join')
 def on_join(data):
@@ -118,8 +114,10 @@ def on_join(data):
 
     channel_info = channels[room]
 
+    # broadcast must be turned off, else when a user clicks on a channel it changes others
     emit("update channel data", {
-         "channel_info": channel_info, "usr": username}, room=room)
+         "channel_info": channel_info, "usr": username})
+    emit("broadcast channels", channels, broadcast=True)
 
 
 @socketio.on('update messages')
@@ -135,7 +133,7 @@ def update_msgs(data):
 def handle_channels(data):
     channel_name = data["channel_name"]
     if channels.get(channel_name):
-        emit("channel name taken", "Channel name already taken!", broadcast=True)
+        emit("channel name taken", "Channel name already taken!")
         return 
                
     channel_users = []

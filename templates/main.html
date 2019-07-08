@@ -19,12 +19,13 @@
     <!-- Javascript -->
     <script src="static/main.js"></script>
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Bungee+Shade|IBM+Plex+Sans:100,100i&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans|Bungee+Shade|IBM+Plex+Mono|IBM+Plex+Sans:100,100i,400,700&display=swap" rel="stylesheet">
     <!-- Script for loading page -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            const MAX_MESSAGES = 100;
+
             var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
             socket.on('connect', function () {
@@ -34,6 +35,8 @@
             });
 
             function listen_for_channel_clicks(event) {
+               
+
                 socket.emit('join', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
                 socket.emit('update messages', { 'username': '{{ user }}', 'channel': event.target.dataset.page })
             }
@@ -48,12 +51,25 @@
             socket.on('update channel messages', data => {
                 text_messages = data.all_messages;
                 clearBox("messages");
-                for (var i in text_messages) {
+
+                var i;
+                for (i = 0; i < MAX_MESSAGES; i++) {
+
+                    if (i == text_messages.length){
+                        break;
+                    }
+
                     var user = text_messages[i].user;
                     var message = text_messages[i].message;
+                    var timestamp = text_messages[i].timestamp;
                     const li = document.createElement('li');
                     li.setAttribute("class", "list-group-item d-flex justify-content-between align-items-center")
+                    li.setAttribute("id", "single-message")
                     li.innerHTML = `${user}  : ${message}`;
+                    const span = document.createElement('span');
+                    span.setAttribute("class", "timestamp")
+                    span.innerHTML = `${timestamp}`;
+                    li.append(span);
                     document.querySelector('#messages').append(li);
                 }
             });
@@ -98,13 +114,7 @@
                             </h2>
                         </div>
                         <ul id="channels-list" class="list-group">
-                            <li>
-                                <a href="#"
-                                    class="list-group-item py-1 d-flex justify-content-between align-items-center"
-                                    data-page="General">General
-                                    <span class="badge badge-primary badge-pill">14</span>
-                                </a>
-                            </li>
+                            
 
                         </ul>
 
@@ -133,11 +143,6 @@
 
 
                         <div id="channel_error_message"></div>
-
-
-
-
-
 
                     </div>
 
@@ -177,14 +182,14 @@
 
                     <!-- Message Bar and Button -->
                     <div class="message-bar">
-                        <form action="" class="chat" id="chat">
-                            <div class="input-group mb-3">
+                        <form action="" class="chat" id="chat" >
+                            <div class="input-group mb-3 " >
                                 <input name="m" id="m" autocomplete="off" type="text" class="form-control"
                                     placeholder="Send Transmission" aria-label="Recipient's username"
                                     aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
+                                <!-- <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button">Send</button>
+                                </div> -->
                         </form>
                     </div>
                 </div>

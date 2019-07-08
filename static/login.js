@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  
 
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
   
     socket.on('connect', function(){
+
+      
   
       $(function () {
         $('#loginform').submit(function(e){
@@ -19,12 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
   
       
-      socket.on('receive message', data => {
-        console.log(data.selection);
-        // const li = document.createElement('li');
-        // li.innerHTML = `Username goes here: ${data.selection}`;
-        // document.querySelector('#messages').append(li);
-    });
+    //   socket.on('receive message', data => {
+    //     console.log(data.selection);
+    //     // const li = document.createElement('li');
+    //     // li.innerHTML = `Username goes here: ${data.selection}`;
+    //     // document.querySelector('#messages').append(li);
+    // });
   
   
     });

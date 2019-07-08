@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('login success', data => {
     const li = document.createElement('li');
     var all_users = []
-    console.log(data);
     for (var key in data) {
       all_users.push(key);
     }
@@ -63,9 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('broadcast channels', data => {
     // Clear and Append all channels 
     clearBox("channels-list");
-
+   
     for (var key in data) {
       channel_name = key;
+      total_users = data[key].users.length;
+     
       // do something with "key" and "value" variables  
       var ul = document.createElement('ul');
       ul.setAttribute("class", "list-group")
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       badge = document.createElement('span');
       badge.setAttribute("class", "badge badge-primary badge-pill")
       badge.setAttribute("id", "channel-badge");
-      badge.innerHTML = '0';
+      badge.innerHTML = total_users;
       newlink.append(badge);
 
 
@@ -104,8 +105,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const li = document.createElement('li');
     li.setAttribute("class", "list-group-item d-flex justify-content-between align-items-center")
+    li.setAttribute("id", "single-message")
 
     li.innerHTML = `${data.usr}: ${data.chat_message}`;
+    const span = document.createElement('span');
+    span.setAttribute("class", "timestamp")
+    span.innerHTML = `${data.timestamp}`;
+    li.append(span);
+
+
     document.querySelector('#messages').append(li);
     $('.message-div').scrollTop($('.message-div')[0].scrollHeight)
   });
@@ -130,7 +138,7 @@ function clearBox(elementID) {
 
 // Renders contents of new page in main view.
 function load_page(data) {
-  console.log(data.channel_info);
+
   name = data.channel_info.channel_name;
   const request = new XMLHttpRequest();
   request.open('GET', `/${name}`);
