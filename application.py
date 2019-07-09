@@ -147,3 +147,4 @@ def handle_channels(data):
     channels.update(newchannel)
 
     emit("broadcast channels", channels, broadcast=True)
+
