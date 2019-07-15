@@ -1,3 +1,3 @@
-# Project 2
+# Flask Chat App
 
-Web Programming with Python and JavaScript
+A chat applicaiton built using Flak, Python, SocketIO and Javascript. 
